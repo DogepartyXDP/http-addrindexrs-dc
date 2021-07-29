@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv/config')
 const express = require('express')
 const url = require('url')
 const http = require('http')
