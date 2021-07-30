@@ -20,7 +20,20 @@ const dogecoin = {
   scriptHash: 0x16,
   wif: 0x9e,
 }
+const dogecointestnet = {
+  messagePrefix: '\x19Dogecoin Signed Message:\n',
+  //bech32: 'bc',
+  bip32: {
+    public: 0x0432a9a8,
+    private: 0x0432a243,
+  },
+  pubKeyHash: 0x71,
+  scriptHash: 0xc4,
+  wif: 0xf1,
+}
 
+const useTestnet = (parseInt(process.env.USE_TESTNET) == 1)
+const nodeNetwork = (useTestnet?dogecointestnet:dogecoin)
 const nodeUrl = new url.URL(process.env.NODE_URL)
 const addressIndexRsServerUrl = new url.URL(process.env.ADDRESS_INDEX_RS_SERVER_URL)
 var nodeClient = null
@@ -146,7 +159,7 @@ async function startApi(){
 		let address = req.params.address
 		console.log("Balance requested for "+address+"...")
 		
-		const bScriptPubKey = bitcoin.address.toOutputScript(address, dogecoin)
+		const bScriptPubKey = bitcoin.address.toOutputScript(address, nodeNetwork)
 		const bScriptHash = bitcoin.crypto.sha256(bScriptPubKey)
 		const hashHex = bScriptHash.reverse().toString('hex')
 		
@@ -162,7 +175,7 @@ async function startApi(){
 		let address = req.params.address
 		console.log("Utxos requested for "+address+"...")
 		
-		const bScriptPubKey = bitcoin.address.toOutputScript(address, dogecoin)
+		const bScriptPubKey = bitcoin.address.toOutputScript(address, nodeNetwork)
 		const bScriptHash = bitcoin.crypto.sha256(bScriptPubKey)
 		const hashHex = bScriptHash.reverse().toString('hex')
 		
